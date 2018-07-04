@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.spring.sample.springdemo.exception.RestException;
 import br.com.spring.sample.springdemo.model.Book;
 import br.com.spring.sample.springdemo.service.BookService;
 
@@ -14,17 +15,27 @@ import br.com.spring.sample.springdemo.service.BookService;
 @RequestMapping("v1/book")
 public class BookRest {
 
-    @Autowired
-    private BookService service;
+	@Autowired
+	private BookService service;
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public Book getBy(@PathVariable Integer id) {
-        return service.getBy(id);
-    }
+	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
+	public Book getBy(@PathVariable Integer id) throws RestException {
+		return service.getBy(id);
+	}
 
-    @RequestMapping(method = RequestMethod.POST)
-    public Book save(@RequestBody Book book) {
-        return service.save(book);
-    }
+	@RequestMapping(method = RequestMethod.GET)
+	public Iterable<Book> getAll() {
+		return service.getAll();
+	}
+	
+	@RequestMapping(method = RequestMethod.POST)
+	public Book save(@RequestBody Book book) {
+		return service.save(book);
+	}
+	
+	@RequestMapping(value="/{id}", method = RequestMethod.DELETE)
+	public void deleteById(@PathVariable Integer id) {
+		service.deleteById(id);
+	}
 
 }
