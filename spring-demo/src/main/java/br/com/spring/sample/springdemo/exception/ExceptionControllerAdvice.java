@@ -22,6 +22,19 @@ public class ExceptionControllerAdvice {
 		
 		logger.log(Level.SEVERE, "Ocorreu um erro inesperado", ex);
 		
-		return new ResponseEntity<ErrorResponse>(error, HttpStatus.OK);
+		return new ResponseEntity<ErrorResponse>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	
+	@ExceptionHandler(AcessoNegadoException.class)
+	public ResponseEntity<ErrorResponse> acessoNegadoexceptionHandler(AcessoNegadoException ex) {
+		ErrorResponse error = new ErrorResponse();
+		String msg = "Acesso negado ao usuario: " + ex.getLogin();
+		
+		error.setCode(HttpStatus.UNAUTHORIZED.value());
+		error.setMessage(msg);
+		
+		logger.log(Level.SEVERE, msg, ex);
+		
+		return new ResponseEntity<ErrorResponse>(error, HttpStatus.UNAUTHORIZED);
 	}
 }
