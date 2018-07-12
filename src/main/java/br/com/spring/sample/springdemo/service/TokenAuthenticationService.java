@@ -8,12 +8,15 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.DatatypeConverter;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import br.com.spring.sample.springdemo.exception.AcessoNegadoException;
-import br.com.spring.sample.springdemo.model.Credencial;
+import br.com.spring.sample.springdemo.exception.DadosInvalidosException;
+import br.com.spring.sample.springdemo.model.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
@@ -24,10 +27,17 @@ public class TokenAuthenticationService {
 
 	private static final String KEY_SECRET = "IShPd";
 	private static final String HEADER_STRING = "Authorization";
+	
+	@Autowired
+	private UserService userService;
 
-	public void validarCrendenciais(Credencial crendencial) throws AcessoNegadoException {
-		if (!crendencial.getLogin().equals("teste") || !crendencial.getPassword().equals("123")) {
-			throw new AcessoNegadoException(crendencial.getLogin());
+	public void validarCrendenciais(User user) throws AcessoNegadoException {
+		if (StringUtils.isEmpty(user.getLogin()) || StringUtils.isEmpty(user.getPassword())) {
+			throw new DadosInvalidosException();
+		}
+		
+		if (userService.getBy(user.getLogin(), user.getPassword()) == null) {
+			throw new AcessoNegadoException(user.getLogin());
 		}
 	}
 

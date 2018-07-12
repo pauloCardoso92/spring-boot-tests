@@ -1,8 +1,14 @@
-package br.com.spring.sample.springdemo.exception;
+package br.com.spring.sample.springdemo.exception.response;
 
-public class ErrorResponse {
+public class ResponseError {
 	private int code;
 	private String message;
+	
+	public ResponseError(int code, String message) {
+		super();
+		this.code = code;
+		this.message = message;
+	}
 
 	public int getCode() {
 		return code;
