@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import io.jsonwebtoken.ClaimJwtException;
+
 @ControllerAdvice
 public class ExceptionControllerAdvice {
 	
@@ -26,7 +28,7 @@ public class ExceptionControllerAdvice {
 	}
 	
 	@ExceptionHandler(AcessoNegadoException.class)
-	public ResponseEntity<ErrorResponse> acessoNegadoexceptionHandler(AcessoNegadoException ex) {
+	public ResponseEntity<ErrorResponse> acessoNegadoExceptionHandler(AcessoNegadoException ex) {
 		ErrorResponse error = new ErrorResponse();
 		String msg = "Acesso negado ao usuario: " + ex.getLogin();
 		
@@ -36,5 +38,18 @@ public class ExceptionControllerAdvice {
 		logger.log(Level.SEVERE, msg, ex);
 		
 		return new ResponseEntity<ErrorResponse>(error, HttpStatus.UNAUTHORIZED);
+	}
+	
+	@ExceptionHandler(ClaimJwtException.class)
+	public ResponseEntity<ErrorResponse> tokenExpiradoExceptionHandler(ClaimJwtException ex) {
+		ErrorResponse error = new ErrorResponse();
+		String msg = "Token expirado: " + ex.getMessage();
+		
+		error.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+		error.setMessage(msg);
+		
+		logger.log(Level.SEVERE, msg, ex);
+		
+		return new ResponseEntity<ErrorResponse>(error, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 }

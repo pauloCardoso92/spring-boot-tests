@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.spring.sample.springdemo.exception.AcessoNegadoException;
 import br.com.spring.sample.springdemo.model.Credencial;
 import br.com.spring.sample.springdemo.service.TokenAuthenticationService;
 
@@ -17,7 +18,7 @@ public class LoginRest {
 	private TokenAuthenticationService tokenService;
 
 	@RequestMapping(method = RequestMethod.POST)
-	public String fazerLogin(@RequestBody Credencial credencial) throws Exception {
+	public String realizarLogin(@RequestBody Credencial credencial) throws AcessoNegadoException {
 		tokenService.validarCrendenciais(credencial);
 		return tokenService.gerarToken(credencial.getLogin());
 	}

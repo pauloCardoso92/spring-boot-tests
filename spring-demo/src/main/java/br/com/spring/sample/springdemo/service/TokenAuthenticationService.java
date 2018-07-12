@@ -24,9 +24,8 @@ public class TokenAuthenticationService {
 
 	private static final String KEY_SECRET = "IShPd";
 	private static final String HEADER_STRING = "Authorization";
-	private static final int expiraEmDias = 1;
 
-	public void validarCrendenciais(Credencial crendencial) throws Exception {
+	public void validarCrendenciais(Credencial crendencial) throws AcessoNegadoException {
 		if (!crendencial.getLogin().equals("teste") || !crendencial.getPassword().equals("123")) {
 			throw new AcessoNegadoException(crendencial.getLogin());
 		}
@@ -35,7 +34,7 @@ public class TokenAuthenticationService {
 	public String gerarToken(String login) {
 		SignatureAlgorithm algoritimoAssinatura = SignatureAlgorithm.HS512;
 		Calendar expira = Calendar.getInstance();
-		expira.add(Calendar.DAY_OF_MONTH, expiraEmDias);
+		expira.add(Calendar.MINUTE, 45);
 
 		byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(KEY_SECRET);
 		SecretKeySpec key = new SecretKeySpec(apiKeySecretBytes, algoritimoAssinatura.getJcaName());
@@ -43,12 +42,13 @@ public class TokenAuthenticationService {
 		JwtBuilder construtor = Jwts.builder() 
 				.setIssuedAt(new Date())
 				.setIssuer(login)
+				.claim("id", 155)
 				.signWith(algoritimoAssinatura, key)
 				.setExpiration(expira.getTime());
 
 		return construtor.compact();
 	}
-
+	
 	public Authentication getAuthentication(HttpServletRequest request) {
 		String token = request.getHeader(HEADER_STRING);
 		Claims claims = Jwts.parser().setSigningKey(DatatypeConverter.parseBase64Binary(KEY_SECRET))

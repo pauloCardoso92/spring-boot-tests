@@ -19,13 +19,15 @@ public class JWTAuthenticationFilter extends GenericFilterBean {
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain)
 			throws IOException, ServletException {
+		HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+		String url = httpServletRequest.getRequestURL().toString();
 
-		if (!((HttpServletRequest) request).getRequestURL().toString().endsWith("v1/login")) {
-			Authentication authentication = new TokenAuthenticationService().getAuthentication((HttpServletRequest) request);
+		if (!url.endsWith("v1/login")) {
+			Authentication authentication = new TokenAuthenticationService().getAuthentication(httpServletRequest);
 			SecurityContextHolder.getContext().setAuthentication(authentication);
 		}
 
 		filterChain.doFilter(request, response);
 	}
-
+	
 }
