@@ -5,11 +5,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>br.com.spring.sample</groupId>
-	<artifactId>spring-demo</artifactId>
+	<artifactId>spring-boot-tests</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>spring-demo</name>
+	<name>spring-boot-tests</name>
 	<description>Demo project for Spring Boot</description>
 
 	<parent>
